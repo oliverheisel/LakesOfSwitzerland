@@ -31,7 +31,14 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert 'map.createPane("rivers")' in javascript
     assert 'riversPane.style.pointerEvents = "none"' in javascript
     assert 'countryPane.style.pointerEvents = "none"' in javascript
+    assert 'map.createPane("countryMask")' in javascript
+    assert 'countryMaskPane.style.pointerEvents = "none"' in javascript
     assert 'const countryRenderer = L.svg' in javascript
+    assert 'fillRule: "evenodd"' in javascript
+    assert "function isDisplayedLake(feature)" in javascript
+    assert "geoJson.features.filter(isDisplayedLake)" in javascript
+    assert 'color: "#3a4144"' in javascript
+    assert javascript.count("fillOpacity: 1") >= 3
     assert 'id="rivers-button"' in html
     assert 'aria-pressed="true"' in html
     assert 'riversButton.addEventListener("click"' in javascript
@@ -42,6 +49,8 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert "--brand-primary: #f5ff00" in stylesheet
     assert "\u2014" not in html + javascript + readme
     assert "\u2013" not in html + javascript + readme
+    assert "17’966" in html
+    assert "1’486" in html
 
 
 def test_pages_workflow_stages_only_required_site_files() -> None:

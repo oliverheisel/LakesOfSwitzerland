@@ -10,14 +10,14 @@ const numberFormat = new Intl.NumberFormat("en-CH");
 const normalStyle = {
   color: "#61b9d8",
   fillColor: "#247BA0",
-  fillOpacity: 0.76,
+  fillOpacity: 1,
   opacity: 0.96,
   weight: 1,
 };
 const borderStyle = {
   color: "#a6e1f3",
   fillColor: "#3f9fc4",
-  fillOpacity: 0.82,
+  fillOpacity: 1,
   opacity: 1,
   weight: 1.8,
 };
@@ -56,6 +56,11 @@ countryPane.style.zIndex = "300";
 countryPane.style.pointerEvents = "none";
 const countryRenderer = L.svg({ pane: "country", padding: 0.2 });
 
+const countryMaskPane = map.createPane("countryMask");
+countryMaskPane.style.zIndex = "375";
+countryMaskPane.style.pointerEvents = "none";
+const countryMaskRenderer = L.svg({ pane: "countryMask", padding: 0 });
+
 const renderer = L.canvas({ padding: 0.4 });
 map.createPane("exactSelection");
 map.getPane("exactSelection").style.zIndex = "450";
@@ -77,9 +82,15 @@ let lakesLayer;
 let exactSelection;
 let selectedLayer;
 let searchIndex = [];
+let visibleStatsReady = false;
 
 function featureStyle(feature) {
   return feature.properties?.border_lake ? borderStyle : normalStyle;
+}
+
+function isDisplayedLake(feature) {
+  const properties = feature.properties ?? {};
+  return Boolean(properties.border_lake || properties.country?.includes("CH"));
 }
 
 function normalize(value) {
@@ -221,6 +232,17 @@ function onEachFeature(feature, layer) {
   addToSearchIndex(feature, layer);
 }
 
+function updateVisibleStats(features) {
+  const namedFeatures = features.filter((feature) => feature.properties?.name).length;
+  const interiorRings = features.reduce(
+    (total, feature) => total + countGeometry(feature.geometry).rings,
+    0,
+  );
+  document.querySelector("#feature-count").textContent = numberFormat.format(features.length);
+  document.querySelector("#named-count").textContent = numberFormat.format(namedFeatures);
+  document.querySelector("#ring-count").textContent = numberFormat.format(interiorRings);
+}
+
 function closeSearchResults() {
   searchResults.hidden = true;
   searchResults.replaceChildren();
@@ -304,6 +326,7 @@ async function loadManifest() {
     const response = await fetch(MANIFEST_URL);
     if (!response.ok) return;
     const manifest = await response.json();
+    if (visibleStatsReady) return;
     document.querySelector("#feature-count").textContent = numberFormat.format(manifest.features);
     document.querySelector("#named-count").textContent = numberFormat.format(manifest.named_features);
     document.querySelector("#ring-count").textContent = numberFormat.format(manifest.interior_rings);
@@ -323,15 +346,51 @@ async function loadCountryBoundary() {
       renderer: countryRenderer,
       smoothFactor: 0,
       style: {
-        color: "#7997a3",
+        color: "#3a4144",
         fillColor: "#20272a",
         fillOpacity: 1,
-        opacity: 0.92,
-        weight: 1.35,
+        opacity: 0.72,
+        weight: 0.85,
       },
     }).addTo(map);
+    addCountryMask(country.features[0]?.geometry);
   } catch {
     // The lake map remains usable if the visual country backdrop is unavailable.
+  }
+}
+
+function addCountryMask(geometry) {
+  if (!geometry || !["Polygon", "MultiPolygon"].includes(geometry.type)) return;
+
+  const polygons = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
+  const worldRing = [[85, -180], [85, 180], [-85, 180], [-85, -180], [85, -180]];
+  const toLatLngRing = (ring) => ring.map(([longitude, latitude]) => [latitude, longitude]);
+  const outerRings = polygons.map((polygon) => toLatLngRing(polygon[0]));
+
+  L.polygon([worldRing, ...outerRings], {
+    fill: true,
+    fillColor: "#0f0f0f",
+    fillOpacity: 1,
+    fillRule: "evenodd",
+    interactive: false,
+    pane: "countryMask",
+    renderer: countryMaskRenderer,
+    smoothFactor: 0,
+    stroke: false,
+  }).addTo(map);
+
+  for (const polygon of polygons) {
+    for (const hole of polygon.slice(1)) {
+      L.polygon(toLatLngRing(hole), {
+        fillColor: "#0f0f0f",
+        fillOpacity: 1,
+        interactive: false,
+        pane: "countryMask",
+        renderer: countryMaskRenderer,
+        smoothFactor: 0,
+        stroke: false,
+      }).addTo(map);
+    }
   }
 }
 
@@ -341,12 +400,14 @@ async function initialize() {
 
   try {
     const geoJson = await fetchGeoJsonWithProgress(DATA_URL);
+    const visibleFeatures = geoJson.features.filter(isDisplayedLake);
+    const visibleGeoJson = { ...geoJson, features: visibleFeatures };
     loadTitle.textContent = "Drawing map";
-    loadStatus.textContent = `${numberFormat.format(geoJson.features.length)} features...`;
+    loadStatus.textContent = `${numberFormat.format(visibleFeatures.length)} features...`;
     progressBar.style.width = "97%";
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
-    lakesLayer = L.geoJSON(geoJson, {
+    lakesLayer = L.geoJSON(visibleGeoJson, {
       onEachFeature,
       renderer,
       smoothFactor: 1,
@@ -355,7 +416,9 @@ async function initialize() {
 
     progressBar.style.width = "100%";
     loadTitle.textContent = "Map ready";
-    loadStatus.textContent = `${numberFormat.format(geoJson.features.length)} lakes loaded`;
+    loadStatus.textContent = `${numberFormat.format(visibleFeatures.length)} lakes loaded`;
+    visibleStatsReady = true;
+    updateVisibleStats(visibleFeatures);
     searchIndex.sort((a, b) => a.label.localeCompare(b.label, "en-CH"));
     searchInput.disabled = false;
     fitButton.disabled = false;

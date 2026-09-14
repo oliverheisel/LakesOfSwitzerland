@@ -12,7 +12,9 @@ without client-side geometry simplification. A separate BAFU river order layer
 shows rivers with widths based on their Strahler network order. It can be
 toggled without changing the downloadable lake dataset. An unsimplified
 swissBOUNDARIES3D 2026 vector polygon provides a crisp national outline and a
-subtle background highlight for Switzerland.
+subtle background highlight for Switzerland. The viewer limits rivers to the
+precise Swiss boundary and displays only Swiss lakes plus complete border
+lakes. The downloadable master dataset remains unchanged.
 
 The deployment workflow publishes only the viewer and its required data. For a
 new repository, select **GitHub Actions** once under **Settings → Pages → Build
