@@ -12,3 +12,16 @@ venv/
 # Temporary build output.
 *.tmp
 
+# Heisel Project Tools
+/Heisel_ProjectTools/
+/AGENTS.md
+.DS_Store
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.secrets/
+credentials.*
+.ruff_cache/
+node_modules/
