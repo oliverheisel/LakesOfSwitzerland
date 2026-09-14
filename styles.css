@@ -39,6 +39,7 @@
   --water: #247ba0;
   --water-light: #61b9d8;
   --border-lake: #3f9fc4;
+  --brand-primary: #f5ff00;
   --selection: #ffffff;
   --line: rgba(255, 255, 255, 0.1);
   font-family: "Open Sans", sans-serif;
@@ -108,14 +109,33 @@ a {
 
 .brand-link {
   display: inline-block;
-  margin-bottom: 1.9rem;
+  height: 70px;
+  margin-bottom: 1.4rem;
+  position: relative;
+  width: 180px;
 }
 
 .brand-logo {
+  clip-path: inset(0 0 50% 0);
   display: block;
   height: auto;
-  max-width: 180px;
-  width: 48%;
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  width: 180px;
+}
+
+.brand-logo-primary {
+  background: var(--brand-primary);
+  clip-path: inset(50% 0 0 0);
+  display: block;
+  height: 70px;
+  inset: 0;
+  -webkit-mask: url("./assets/logo/oliver-heisel-wordmark.png") top left / 180px auto no-repeat;
+  mask: url("./assets/logo/oliver-heisel-wordmark.png") top left / 180px auto no-repeat;
+  pointer-events: none;
+  position: absolute;
+  width: 180px;
 }
 
 .eyebrow,
@@ -652,11 +672,20 @@ noscript {
   }
 
   .brand-link {
+    height: 51px;
     margin-bottom: 0.8rem;
+    width: 130px;
   }
 
   .brand-logo {
-    max-width: 130px;
+    width: 130px;
+  }
+
+  .brand-logo-primary {
+    height: 51px;
+    -webkit-mask-size: 130px auto;
+    mask-size: 130px auto;
+    width: 130px;
   }
 
   h1 {

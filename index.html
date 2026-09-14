@@ -1,14 +1,14 @@
 <!doctype html>
-<html lang="de">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta
       name="description"
-      content="Interaktive Karte aller 18'004 stehenden Gewässer aus dem LakesOfSwitzerland-Datensatz."
+      content="Interactive map of all 18,004 standing water features in the LakesOfSwitzerland dataset."
     >
     <meta name="theme-color" content="#171717">
-    <title>Lakes of Switzerland – Datensatzkarte</title>
+    <title>Lakes of Switzerland: Dataset Map</title>
     <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
     <link
       rel="stylesheet"
@@ -26,10 +26,10 @@
     <script src="./app.js" defer></script>
   </head>
   <body>
-    <a class="skip-link" href="#map">Direkt zur Karte</a>
+    <a class="skip-link" href="#map">Skip to map</a>
 
     <div class="app-shell">
-      <aside class="sidebar" aria-label="Datensatz und Gewässerdetails">
+      <aside class="sidebar" aria-label="Dataset and lake details">
         <header class="masthead">
           <a class="brand-link" href="https://www.heisel.one/" aria-label="heisel.one">
             <img
@@ -39,17 +39,14 @@
               width="381"
               height="148"
             >
+            <span class="brand-logo-primary" aria-hidden="true"></span>
           </a>
-          <p class="eyebrow">Data · Mapping · Switzerland</p>
+          <p class="eyebrow">Open geodata</p>
           <h1>Lakes of Switzerland</h1>
-          <p class="intro">
-            Alle stehenden Gewässer der Schweiz – vom Bodensee bis zum kleinsten
-            kartierten Weiher.
-          </p>
         </header>
 
         <section class="search-section" aria-labelledby="search-title">
-          <label id="search-title" for="lake-search">Gewässer suchen</label>
+          <label id="search-title" for="lake-search">Find a lake</label>
           <div class="search-wrap">
             <svg aria-hidden="true" viewBox="0 0 24 24">
               <path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" />
@@ -57,7 +54,7 @@
             <input
               id="lake-search"
               type="search"
-              placeholder="Name oder Gewässer-ID"
+              placeholder="Name or lake ID"
               autocomplete="off"
               disabled
               aria-controls="search-results"
@@ -67,58 +64,51 @@
           <ul id="search-results" class="search-results" hidden></ul>
         </section>
 
-        <section class="stats" aria-label="Kennzahlen des Datensatzes">
+        <section class="stats" aria-label="Dataset statistics">
           <div>
             <strong id="feature-count">18’004</strong>
-            <span>Flächen</span>
+            <span>features</span>
           </div>
           <div>
             <strong id="named-count">1’487</strong>
-            <span>benannt</span>
+            <span>named</span>
           </div>
           <div>
             <strong id="ring-count">1’103</strong>
-            <span>Innenringe</span>
+            <span>holes</span>
           </div>
         </section>
 
         <section id="feature-panel" class="feature-panel" aria-live="polite">
-          <p class="panel-kicker">Detailgrad</p>
-          <h2>Originalgeometrien</h2>
-          <p>
-            Die Übersicht wird nur für den Bildschirm optimiert. Beim Anklicken
-            erscheint die ausgewählte Uferlinie zusätzlich unverändert und ohne
-            geometrische Vereinfachung.
-          </p>
+          <p class="panel-kicker">Geometry detail</p>
+          <h2>Select a lake</h2>
           <dl class="detail-list">
             <div>
-              <dt>Koordinaten</dt>
-              <dd>WGS84 · 8 Dezimalstellen</dd>
+              <dt>Coordinates</dt>
+              <dd>WGS84, 8 decimals</dd>
             </div>
             <div>
-              <dt>Geometrien</dt>
-              <dd>100 % gültig</dd>
+              <dt>Selection</dt>
+              <dd>Full source geometry</dd>
             </div>
           </dl>
-          <p class="panel-hint">Ein Gewässer anklicken oder über die Suche auswählen.</p>
         </section>
 
         <footer class="sidebar-footer">
-          <a href="./Maps/LakesOfSwitzerland_WGS84.geojson" download>GeoJSON herunterladen</a>
-          <a href="https://github.com/oliverheisel/LakesOfSwitzerland">Quellcode</a>
-          <p>© 2026 Oliver Heisel · Daten: © swisstopo</p>
+          <a href="./Maps/LakesOfSwitzerland_WGS84.geojson" download>Download GeoJSON</a>
+          <a href="https://github.com/oliverheisel/LakesOfSwitzerland">GitHub</a>
         </footer>
       </aside>
 
-      <main class="map-shell" aria-label="Karte der Schweizer Gewässer">
+      <main class="map-shell" aria-label="Map of Swiss lakes">
         <div id="map" tabindex="0"></div>
 
-        <div class="map-toolbar" aria-label="Kartenwerkzeuge">
+        <div class="map-toolbar" aria-label="Map tools">
           <button id="fit-button" type="button" disabled>
             <svg aria-hidden="true" viewBox="0 0 24 24">
               <path d="M8 3H3v5M16 3h5v5M8 21H3v-5m13 5h5v-5" />
             </svg>
-            Ganze Schweiz
+            Fit data
           </button>
           <span id="zoom-label">Zoom 8</span>
         </div>
@@ -126,21 +116,21 @@
         <div id="load-panel" class="load-panel" role="status" aria-live="polite">
           <div class="load-mark" aria-hidden="true"></div>
           <div>
-            <strong id="load-title">Gewässer werden geladen</strong>
-            <span id="load-status">GeoJSON wird übertragen …</span>
+            <strong id="load-title">Loading lakes</strong>
+            <span id="load-status">Downloading GeoJSON...</span>
           </div>
           <div class="progress-track" aria-hidden="true">
             <span id="progress-bar"></span>
           </div>
         </div>
 
-        <div class="legend" aria-label="Legende">
-          <span><i class="swatch lake"></i>Gewässer</span>
-          <span><i class="swatch border"></i>Grenzsee</span>
-          <span><i class="line-swatch"></i>exakte Auswahl</span>
+        <div class="legend" aria-label="Legend">
+          <span><i class="swatch lake"></i>Lake</span>
+          <span><i class="swatch border"></i>Border lake</span>
+          <span><i class="line-swatch"></i>Full detail</span>
         </div>
 
-        <noscript>Für diese interaktive Karte muss JavaScript aktiviert sein.</noscript>
+        <noscript>JavaScript is required for this interactive map.</noscript>
       </main>
     </div>
   </body>

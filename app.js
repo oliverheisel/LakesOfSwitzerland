@@ -5,7 +5,7 @@ const MANIFEST_URL = "./data/processed/build_manifest.json";
 const SWITZERLAND_VIEW = [46.82, 8.23];
 const SWITZERLAND_ZOOM = 8;
 
-const numberFormat = new Intl.NumberFormat("de-CH");
+const numberFormat = new Intl.NumberFormat("en-CH");
 const normalStyle = {
   color: "#61b9d8",
   fillColor: "#247BA0",
@@ -36,14 +36,17 @@ L.control.scale({ imperial: false, position: "bottomright" }).addTo(map);
 L.tileLayer(
   "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg",
   {
-    attribution: "Basiskarte: &copy; swisstopo",
+    attribution: "Basemap: &copy; swisstopo",
     maxZoom: 19,
     tileSize: 256,
   },
 ).addTo(map);
 
 const renderer = L.canvas({ padding: 0.4 });
-const exactRenderer = L.canvas({ padding: 0.7, tolerance: 5 });
+map.createPane("exactSelection");
+map.getPane("exactSelection").style.zIndex = "450";
+map.getPane("exactSelection").style.pointerEvents = "none";
+const exactRenderer = L.canvas({ pane: "exactSelection", padding: 0.7 });
 const searchInput = document.querySelector("#lake-search");
 const searchResults = document.querySelector("#search-results");
 const featurePanel = document.querySelector("#feature-panel");
@@ -67,7 +70,7 @@ function normalize(value) {
   return String(value ?? "")
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "")
-    .toLocaleLowerCase("de-CH");
+    .toLocaleLowerCase("en-CH");
 }
 
 function escapeHtml(value) {
@@ -99,8 +102,8 @@ function countGeometry(geometry) {
 }
 
 function countryNames(countries) {
-  const names = { CH: "Schweiz", DE: "Deutschland", AT: "Österreich", FR: "Frankreich", IT: "Italien" };
-  return (countries ?? []).map((code) => names[code] ?? code).join(" · ") || "–";
+  const names = { CH: "Switzerland", DE: "Germany", AT: "Austria", FR: "France", IT: "Italy" };
+  return (countries ?? []).map((code) => names[code] ?? code).join(", ") || "N/A";
 }
 
 function propertyRow(label, value) {
@@ -110,25 +113,21 @@ function propertyRow(label, value) {
 function renderFeaturePanel(feature) {
   const properties = feature.properties ?? {};
   const details = countGeometry(feature.geometry);
-  const name = properties.name || "Unbenanntes Gewässer";
+  const name = properties.name || "Unnamed lake";
   const geometryLabel = details.polygons > 1
-    ? `MultiPolygon · ${numberFormat.format(details.polygons)} Teile`
+    ? `MultiPolygon, ${numberFormat.format(details.polygons)} parts`
     : "Polygon";
 
   featurePanel.innerHTML = `
-    <p class="panel-kicker">Ausgewähltes Gewässer</p>
+    <p class="panel-kicker">Selected lake</p>
     <h2>${escapeHtml(name)}</h2>
-    <p>Die orange-rote Uferlinie wird mit sämtlichen Punkten der Quelldatei dargestellt.</p>
     <dl class="detail-list">
-      ${propertyRow("Stützpunkte", numberFormat.format(details.vertices))}
-      ${propertyRow("Geometrie", geometryLabel)}
-      ${propertyRow("Innenringe", numberFormat.format(details.rings))}
-      ${propertyRow("Länder", countryNames(properties.country))}
-      ${propertyRow("Lake ID", properties.lake_id || "–")}
-      ${propertyRow("GEWISS-Nr.", properties.gewiss_nr || "–")}
-      ${propertyRow("Quelljahr", properties.source_year || "–")}
+      ${propertyRow("Vertices", numberFormat.format(details.vertices))}
+      ${propertyRow("Geometry", geometryLabel)}
+      ${propertyRow("Holes", numberFormat.format(details.rings))}
+      ${propertyRow("Countries", countryNames(properties.country))}
+      ${propertyRow("Lake ID", properties.lake_id || "N/A")}
     </dl>
-    <p class="panel-hint">Zoomen zeigt die Ufergeometrie bis auf den einzelnen Stützpunkt genau.</p>
   `;
 }
 
@@ -140,6 +139,7 @@ function selectFeature(layer, shouldZoom = false) {
   selectedLayer.setStyle({ color: "#ffffff", opacity: 1, weight: 2.2 });
   exactSelection = L.geoJSON(layer.feature, {
     interactive: false,
+    pane: "exactSelection",
     renderer: exactRenderer,
     smoothFactor: 0,
     style: {
@@ -160,13 +160,13 @@ function addToSearchIndex(feature, layer) {
   const id = properties.lake_id || properties.gewiss_nr || properties.source_feature_id;
   if (!name && !id) return;
 
-  const label = name || `Gewässer ${id}`;
+  const label = name || `Lake ${id}`;
   const descriptor = properties.border_lake
     ? countryNames(properties.country)
     : (properties.gewiss_nr ? `GEWISS ${properties.gewiss_nr}` : properties.lake_id);
 
   searchIndex.push({
-    descriptor: descriptor || "Unbenannt",
+    descriptor: descriptor || "Unnamed",
     label,
     layer,
     normalized: normalize(`${label} ${id} ${properties.gewiss_nr ?? ""}`),
@@ -198,14 +198,14 @@ function renderSearchResults() {
     .sort((a, b) => {
       const aStarts = normalize(a.label).startsWith(query) ? 0 : 1;
       const bStarts = normalize(b.label).startsWith(query) ? 0 : 1;
-      return aStarts - bStarts || a.label.localeCompare(b.label, "de-CH");
+      return aStarts - bStarts || a.label.localeCompare(b.label, "en-CH");
     })
     .slice(0, 8);
 
   searchResults.replaceChildren();
   if (!matches.length) {
     const item = document.createElement("li");
-    item.innerHTML = "<button type=\"button\" disabled>Kein Treffer</button>";
+    item.innerHTML = "<button type=\"button\" disabled>No results</button>";
     searchResults.append(item);
   } else {
     for (const match of matches) {
@@ -246,13 +246,13 @@ async function fetchGeoJsonWithProgress(url) {
     if (total) {
       const percent = Math.min(92, Math.round((loaded / total) * 92));
       progressBar.style.width = `${percent}%`;
-      loadStatus.textContent = `${(loaded / 1_000_000).toFixed(1)} von ${(total / 1_000_000).toFixed(1)} MB`;
+      loadStatus.textContent = `${(loaded / 1_000_000).toFixed(1)} of ${(total / 1_000_000).toFixed(1)} MB`;
     } else {
-      loadStatus.textContent = `${(loaded / 1_000_000).toFixed(1)} MB übertragen`;
+      loadStatus.textContent = `${(loaded / 1_000_000).toFixed(1)} MB downloaded`;
     }
   }
 
-  loadStatus.textContent = "GeoJSON wird ausgewertet …";
+  loadStatus.textContent = "Parsing GeoJSON...";
   progressBar.style.width = "95%";
   await new Promise((resolve) => requestAnimationFrame(resolve));
   return JSON.parse(await new Blob(chunks).text());
@@ -276,8 +276,8 @@ async function initialize() {
 
   try {
     const geoJson = await fetchGeoJsonWithProgress(DATA_URL);
-    loadTitle.textContent = "Karte wird gezeichnet";
-    loadStatus.textContent = `${numberFormat.format(geoJson.features.length)} Geometrien …`;
+    loadTitle.textContent = "Drawing map";
+    loadStatus.textContent = `${numberFormat.format(geoJson.features.length)} features...`;
     progressBar.style.width = "97%";
     await new Promise((resolve) => requestAnimationFrame(resolve));
 
@@ -289,16 +289,16 @@ async function initialize() {
     }).addTo(map);
 
     progressBar.style.width = "100%";
-    loadTitle.textContent = "Karte bereit";
-    loadStatus.textContent = `${numberFormat.format(geoJson.features.length)} Gewässer geladen`;
-    searchIndex.sort((a, b) => a.label.localeCompare(b.label, "de-CH"));
+    loadTitle.textContent = "Map ready";
+    loadStatus.textContent = `${numberFormat.format(geoJson.features.length)} lakes loaded`;
+    searchIndex.sort((a, b) => a.label.localeCompare(b.label, "en-CH"));
     searchInput.disabled = false;
     fitButton.disabled = false;
     window.setTimeout(() => loadPanel.classList.add("is-hidden"), 700);
   } catch (error) {
     loadPanel.classList.add("is-error");
-    loadTitle.textContent = "Karte konnte nicht geladen werden";
-    loadStatus.textContent = `${error.message}. Bitte Seite neu laden.`;
+    loadTitle.textContent = "Map could not load";
+    loadStatus.textContent = `${error.message}. Please reload the page.`;
     progressBar.style.width = "100%";
   }
 }
