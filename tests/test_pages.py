@@ -24,6 +24,9 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert './Maps/Switzerland_WGS84.geojson' in javascript
     assert './data/processed/build_manifest.json' in javascript
     assert "ch.bafu.flussordnungszahlen-strahler" in javascript
+    assert "function riverOpacityForZoom(zoom)" in javascript
+    assert "opacity: riverOpacityForZoom(SWITZERLAND_ZOOM)" in javascript
+    assert "riversLayer.setOpacity(riverOpacityForZoom(zoom))" in javascript
     assert "ch.swisstopo.swissalti3d-reliefschattierung" in javascript
     assert "ch.swisstopo.pixelkarte-grau" not in javascript
     assert "smoothFactor: 0" in javascript

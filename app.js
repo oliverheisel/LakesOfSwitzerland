@@ -6,6 +6,15 @@ const MANIFEST_URL = "./data/processed/build_manifest.json";
 const SWITZERLAND_VIEW = [46.82, 8.23];
 const SWITZERLAND_ZOOM = 8;
 
+function riverOpacityForZoom(zoom) {
+  if (zoom <= 7) return 0.18;
+  if (zoom === 8) return 0.24;
+  if (zoom === 9) return 0.3;
+  if (zoom === 10) return 0.42;
+  if (zoom === 11) return 0.54;
+  return 0.68;
+}
+
 const numberFormat = new Intl.NumberFormat("en-CH");
 const normalStyle = {
   color: "#61b9d8",
@@ -51,7 +60,7 @@ const riversLayer = L.tileLayer(
     attribution: "&copy; BAFU",
     maxZoom: 19,
     minZoom: 7,
-    opacity: 0.65,
+    opacity: riverOpacityForZoom(SWITZERLAND_ZOOM),
     pane: "rivers",
     tileSize: 256,
   },
@@ -473,7 +482,7 @@ riversButton.addEventListener("click", () => {
 map.on("zoomend", () => {
   const zoom = map.getZoom();
   zoomLabel.textContent = `Zoom ${zoom}`;
-  riversLayer.setOpacity(zoom <= 8 ? 0.65 : zoom <= 10 ? 0.75 : 0.88);
+  riversLayer.setOpacity(riverOpacityForZoom(zoom));
 });
 
 initialize();
