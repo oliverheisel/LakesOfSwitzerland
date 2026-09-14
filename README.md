@@ -8,9 +8,11 @@ Switzerland, with complete geometries for the major cross-border lakes.
 [Open the interactive map](https://oliverheisel.github.io/LakesOfSwitzerland/)
 to explore the complete dataset. Search by name or identifier, select any
 polygon and inspect its original vertex count. Selected shorelines are rendered
-without client-side geometry simplification. A separate swisstopo hydrography
-layer adds rivers for visual context without changing the downloadable lake
-dataset.
+without client-side geometry simplification. A separate BAFU river order layer
+shows rivers with widths based on their Strahler network order. It can be
+toggled without changing the downloadable lake dataset. An unsimplified
+swissBOUNDARIES3D 2026 vector polygon provides a crisp national outline and a
+subtle background highlight for Switzerland.
 
 The deployment workflow publishes only the viewer and its required data. For a
 new repository, select **GitHub Actions** once under **Settings → Pages → Build

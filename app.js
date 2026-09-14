@@ -1,6 +1,7 @@
 /* global L */
 
 const DATA_URL = "./Maps/LakesOfSwitzerland_WGS84.geojson";
+const COUNTRY_URL = "./Maps/Switzerland_WGS84.geojson";
 const MANIFEST_URL = "./data/processed/build_manifest.json";
 const SWITZERLAND_VIEW = [46.82, 8.23];
 const SWITZERLAND_ZOOM = 8;
@@ -31,32 +32,29 @@ const map = L.map("map", {
 });
 
 map.attributionControl.setPrefix(false);
+map.attributionControl.addAttribution("&copy; swisstopo");
 L.control.zoom({ position: "bottomright" }).addTo(map);
 L.control.scale({ imperial: false, position: "bottomright" }).addTo(map);
-
-L.tileLayer(
-  "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissalti3d-reliefschattierung/default/current/3857/{z}/{x}/{y}.png",
-  {
-    attribution: "&copy; swisstopo",
-    maxZoom: 19,
-    tileSize: 256,
-  },
-).addTo(map);
 
 const riversPane = map.createPane("rivers");
 riversPane.style.zIndex = "350";
 riversPane.style.pointerEvents = "none";
 const riversLayer = L.tileLayer(
-  "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swisstlm3d-gewaessernetz/default/current/3857/{z}/{x}/{y}.png",
+  "https://wmts.geo.admin.ch/1.0.0/ch.bafu.flussordnungszahlen-strahler/default/current/3857/{z}/{x}/{y}.png",
   {
-    attribution: "&copy; swisstopo",
+    attribution: "&copy; BAFU",
     maxZoom: 19,
-    minZoom: 8,
-    opacity: 0.1,
+    minZoom: 7,
+    opacity: 0.32,
     pane: "rivers",
     tileSize: 256,
   },
 ).addTo(map);
+
+const countryPane = map.createPane("country");
+countryPane.style.zIndex = "300";
+countryPane.style.pointerEvents = "none";
+const countryRenderer = L.svg({ pane: "country", padding: 0.2 });
 
 const renderer = L.canvas({ padding: 0.4 });
 map.createPane("exactSelection");
@@ -67,6 +65,8 @@ const searchInput = document.querySelector("#lake-search");
 const searchResults = document.querySelector("#search-results");
 const featurePanel = document.querySelector("#feature-panel");
 const fitButton = document.querySelector("#fit-button");
+const riversButton = document.querySelector("#rivers-button");
+const riverLegend = document.querySelector("#river-legend");
 const zoomLabel = document.querySelector("#zoom-label");
 const loadPanel = document.querySelector("#load-panel");
 const loadTitle = document.querySelector("#load-title");
@@ -312,7 +312,31 @@ async function loadManifest() {
   }
 }
 
+async function loadCountryBoundary() {
+  try {
+    const response = await fetch(COUNTRY_URL);
+    if (!response.ok) return;
+    const country = await response.json();
+    L.geoJSON(country, {
+      interactive: false,
+      pane: "country",
+      renderer: countryRenderer,
+      smoothFactor: 0,
+      style: {
+        color: "#7997a3",
+        fillColor: "#20272a",
+        fillOpacity: 1,
+        opacity: 0.92,
+        weight: 1.35,
+      },
+    }).addTo(map);
+  } catch {
+    // The lake map remains usable if the visual country backdrop is unavailable.
+  }
+}
+
 async function initialize() {
+  loadCountryBoundary();
   loadManifest();
 
   try {
@@ -357,10 +381,19 @@ fitButton.addEventListener("click", () => {
   map.fitBounds(lakesLayer.getBounds(), { padding: [24, 24] });
 });
 
+riversButton.addEventListener("click", () => {
+  const shouldShow = !map.hasLayer(riversLayer);
+  if (shouldShow) riversLayer.addTo(map);
+  else map.removeLayer(riversLayer);
+  riversButton.classList.toggle("is-active", shouldShow);
+  riversButton.setAttribute("aria-pressed", String(shouldShow));
+  riverLegend.hidden = !shouldShow;
+});
+
 map.on("zoomend", () => {
   const zoom = map.getZoom();
   zoomLabel.textContent = `Zoom ${zoom}`;
-  riversLayer.setOpacity(zoom <= 8 ? 0.1 : zoom <= 10 ? 0.17 : 0.25);
+  riversLayer.setOpacity(zoom <= 8 ? 0.32 : zoom <= 10 ? 0.42 : 0.55);
 });
 
 initialize();

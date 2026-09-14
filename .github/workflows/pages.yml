@@ -33,6 +33,7 @@ jobs:
           cp index.html styles.css app.js _site/
           cp -R assets _site/
           cp Maps/LakesOfSwitzerland_WGS84.geojson _site/Maps/
+          cp Maps/Switzerland_WGS84.geojson _site/Maps/
           cp data/processed/build_manifest.json _site/data/processed/
 
       - name: Upload Pages artifact

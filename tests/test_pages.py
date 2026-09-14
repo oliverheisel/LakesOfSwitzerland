@@ -1,3 +1,4 @@
+import json
 from pathlib import Path
 
 
@@ -20,15 +21,20 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     stylesheet = (ROOT / "styles.css").read_text(encoding="utf-8")
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert './Maps/LakesOfSwitzerland_WGS84.geojson' in javascript
+    assert './Maps/Switzerland_WGS84.geojson' in javascript
     assert './data/processed/build_manifest.json' in javascript
-    assert "ch.swisstopo.swissalti3d-reliefschattierung" in javascript
-    assert "ch.swisstopo.swisstlm3d-gewaessernetz" in javascript
+    assert "ch.bafu.flussordnungszahlen-strahler" in javascript
     assert "ch.swisstopo.pixelkarte-grau" not in javascript
     assert "smoothFactor: 0" in javascript
     assert 'map.createPane("exactSelection")' in javascript
     assert 'style.pointerEvents = "none"' in javascript
     assert 'map.createPane("rivers")' in javascript
     assert 'riversPane.style.pointerEvents = "none"' in javascript
+    assert 'countryPane.style.pointerEvents = "none"' in javascript
+    assert 'const countryRenderer = L.svg' in javascript
+    assert 'id="rivers-button"' in html
+    assert 'aria-pressed="true"' in html
+    assert 'riversButton.addEventListener("click"' in javascript
     assert "map.attributionControl.setPrefix(false)" in javascript
     assert "function formatLakeName(value)" in javascript
     assert "/see$/iu" in javascript
@@ -47,4 +53,14 @@ def test_pages_workflow_stages_only_required_site_files() -> None:
     assert "actions/deploy-pages@v5" in workflow
     assert "cp -R assets _site/" in workflow
     assert "cp Maps/LakesOfSwitzerland_WGS84.geojson _site/Maps/" in workflow
+    assert "cp Maps/Switzerland_WGS84.geojson _site/Maps/" in workflow
     assert "path: _site" in workflow
+
+
+def test_country_backdrop_is_an_unsimplified_vector_polygon() -> None:
+    boundary_path = ROOT / "Maps" / "Switzerland_WGS84.geojson"
+    boundary = json.loads(boundary_path.read_text(encoding="utf-8"))
+    assert len(boundary["features"]) == 1
+    feature = boundary["features"][0]
+    assert feature["properties"]["country"] == "CH"
+    assert feature["geometry"]["type"] == "Polygon"

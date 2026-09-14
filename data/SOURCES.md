@@ -61,3 +61,20 @@ survey accuracy, to avoid meaningless projection noise.
 
 The repository's existing `LICENSE` is unchanged. These source terms and the
 mandatory swisstopo attribution apply independently to the derived geodata.
+
+## Federal Office of Topography swisstopo, swissBOUNDARIES3D
+
+- **Dataset:** swissBOUNDARIES3D, release `2026-01`
+- **Asset:** `swissboundaries3d_2026-01_2056_5728.gpkg.zip`
+- **Published SHA-256:**
+  `68e922353c76fa5db3cef06a32f9711c0198faa6fbd2b5bcde9edc88b0f8999f`
+- **Layer used:** `tlm_landesgebiet`, filtered to `ICC=CH`
+- **Output:** `Maps/Switzerland_WGS84.geojson`
+- **Output SHA-256:**
+  `2f7d58f436069163bcf19fcfc6fb0f42ee7af4344a3e01b8c780da1d59884f39`
+- **Download:**
+  <https://ogd.swisstopo.admin.ch/ch.swisstopo.swissboundaries3d>
+
+The display polygon contains 52,499 source vertices. It is transformed to
+WGS84 and rounded to 8 decimal places without geometric simplification. The
+official product reports positional accuracy of approximately 0.5 metres.
