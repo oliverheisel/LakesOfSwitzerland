@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      name="description"
+      content="Interaktive Karte aller 18'004 stehenden Gewässer aus dem LakesOfSwitzerland-Datensatz."
+    >
+    <title>Lakes of Switzerland – Datensatzkarte</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    >
+    <link rel="stylesheet" href="./styles.css">
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+      defer
+    ></script>
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#map">Direkt zur Karte</a>
+
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Datensatz und Gewässerdetails">
+        <header class="masthead">
+          <p class="eyebrow">swissTLM3D · Release 2026</p>
+          <h1>Lakes of<br>Switzerland</h1>
+          <p class="intro">
+            Alle stehenden Gewässer der Schweiz – vom Bodensee bis zum kleinsten
+            kartierten Weiher.
+          </p>
+        </header>
+
+        <section class="search-section" aria-labelledby="search-title">
+          <label id="search-title" for="lake-search">Gewässer suchen</label>
+          <div class="search-wrap">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="m21 21-4.35-4.35m2.35-5.65a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" />
+            </svg>
+            <input
+              id="lake-search"
+              type="search"
+              placeholder="Name oder Gewässer-ID"
+              autocomplete="off"
+              disabled
+              aria-controls="search-results"
+              aria-expanded="false"
+            >
+          </div>
+          <ul id="search-results" class="search-results" hidden></ul>
+        </section>
+
+        <section class="stats" aria-label="Kennzahlen des Datensatzes">
+          <div>
+            <strong id="feature-count">18’004</strong>
+            <span>Flächen</span>
+          </div>
+          <div>
+            <strong id="named-count">1’487</strong>
+            <span>benannt</span>
+          </div>
+          <div>
+            <strong id="ring-count">1’103</strong>
+            <span>Innenringe</span>
+          </div>
+        </section>
+
+        <section id="feature-panel" class="feature-panel" aria-live="polite">
+          <p class="panel-kicker">Detailgrad</p>
+          <h2>Originalgeometrien</h2>
+          <p>
+            Die Übersicht wird nur für den Bildschirm optimiert. Beim Anklicken
+            erscheint die ausgewählte Uferlinie zusätzlich unverändert und ohne
+            geometrische Vereinfachung.
+          </p>
+          <dl class="detail-list">
+            <div>
+              <dt>Koordinaten</dt>
+              <dd>WGS84 · 8 Dezimalstellen</dd>
+            </div>
+            <div>
+              <dt>Geometrien</dt>
+              <dd>100 % gültig</dd>
+            </div>
+          </dl>
+          <p class="panel-hint">Ein Gewässer anklicken oder über die Suche auswählen.</p>
+        </section>
+
+        <footer class="sidebar-footer">
+          <a href="./Maps/LakesOfSwitzerland_WGS84.geojson" download>GeoJSON herunterladen</a>
+          <a href="https://github.com/oliverheisel/LakesOfSwitzerland">Quellcode</a>
+          <p>Daten: © swisstopo · swissTLM3D 2.4</p>
+        </footer>
+      </aside>
+
+      <main class="map-shell" aria-label="Karte der Schweizer Gewässer">
+        <div id="map" tabindex="0"></div>
+
+        <div class="map-toolbar" aria-label="Kartenwerkzeuge">
+          <button id="fit-button" type="button" disabled>
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M8 3H3v5M16 3h5v5M8 21H3v-5m13 5h5v-5" />
+            </svg>
+            Ganze Schweiz
+          </button>
+          <span id="zoom-label">Zoom 8</span>
+        </div>
+
+        <div id="load-panel" class="load-panel" role="status" aria-live="polite">
+          <div class="load-mark" aria-hidden="true"></div>
+          <div>
+            <strong id="load-title">Gewässer werden geladen</strong>
+            <span id="load-status">GeoJSON wird übertragen …</span>
+          </div>
+          <div class="progress-track" aria-hidden="true">
+            <span id="progress-bar"></span>
+          </div>
+        </div>
+
+        <div class="legend" aria-label="Legende">
+          <span><i class="swatch lake"></i>Gewässer</span>
+          <span><i class="swatch border"></i>Grenzsee</span>
+          <span><i class="line-swatch"></i>exakte Auswahl</span>
+        </div>
+
+        <noscript>Für diese interaktive Karte muss JavaScript aktiviert sein.</noscript>
+      </main>
+    </div>
+  </body>
+</html>

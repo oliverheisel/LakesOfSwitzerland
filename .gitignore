@@ -1,0 +1,14 @@
+# Downloaded source data (the generated master GeoJSON remains versioned).
+data/raw/**/*
+!data/raw/README.md
+
+# Python caches and local environments.
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Temporary build output.
+*.tmp
+

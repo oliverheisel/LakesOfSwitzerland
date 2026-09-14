@@ -1,0 +1,75 @@
+{
+  "border_lakes": {
+    "lake_constance": {
+      "area_km2": 534.1,
+      "bounds": [
+        8.858693,
+        47.47804,
+        9.75385,
+        47.817501
+      ],
+      "countries": [
+        "CH",
+        "DE",
+        "AT"
+      ],
+      "name": "Bodensee"
+    },
+    "lake_geneva": {
+      "area_km2": 579.803,
+      "bounds": [
+        6.148001,
+        46.204268,
+        6.93089,
+        46.518466
+      ],
+      "countries": [
+        "CH",
+        "FR"
+      ],
+      "name": "Genfersee / Lac Léman"
+    },
+    "lake_lugano": {
+      "area_km2": 49.161,
+      "bounds": [
+        8.858664,
+        45.902977,
+        9.125282,
+        46.036367
+      ],
+      "countries": [
+        "CH",
+        "IT"
+      ],
+      "name": "Luganersee / Lago di Lugano"
+    },
+    "lake_maggiore": {
+      "area_km2": 215.135,
+      "bounds": [
+        8.480485,
+        45.721501,
+        8.874172,
+        46.179924
+      ],
+      "countries": [
+        "CH",
+        "IT"
+      ],
+      "name": "Lago Maggiore / Langensee"
+    }
+  },
+  "build": "python3 tools/build_lakes.py",
+  "features": 18004,
+  "interior_rings": 1103,
+  "invalid_geometries": 0,
+  "named_features": 1487,
+  "output": "Maps/LakesOfSwitzerland_WGS84.geojson",
+  "output_crs": "OGC:CRS84 / EPSG:4326 longitude, latitude",
+  "output_sha256": "8cd261d816ab0b5815bd0962bc7c9f97cf5a1dbaef31ace36fb866547de7822c",
+  "overlapping_feature_pairs": 0,
+  "release": "swissTLM3D 2.4 (2026-02)",
+  "source_crs": "EPSG:2056+5728 (reduced to 2D EPSG:2056)",
+  "source_input": "GeoPackage: SWISSTLM3D_2026_LV95_LN02.gpkg",
+  "source_release_asset_sha256": "2218054b21c23e1683fb14a80a9c33d811c7e02a891ab4aedaf761b68750206a",
+  "valid_geometries": 18004
+}
