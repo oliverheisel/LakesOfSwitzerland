@@ -78,17 +78,3 @@ mandatory swisstopo attribution apply independently to the derived geodata.
 The display polygon contains 52,499 source vertices. It is transformed to
 WGS84 and rounded to 8 decimal places without geometric simplification. The
 official product reports positional accuracy of approximately 0.5 metres.
-
-## Seerhein viewer line
-
-The national display mask would otherwise hide the Seerhein between the two
-separate Lake Constance polygons. The viewer therefore draws the two official
-`Rhein | Le Rhin | Rein | Reno` paths returned by the GeoAdmin identify service
-for `ch.swisstopo.swisstlm3d-gewaessernetz`. The source feature IDs are
-`7143193` and `7143194`, both with `GWL_NR=CH0000010000`. Coordinates are kept
-in WGS84 at the precision returned by the service and are not simplified.
-
-- **Layer:** `ch.swisstopo.swisstlm3d-gewaessernetz`
-- **Provider:** Federal Office of Topography swisstopo
-- **Accessed:** 14 September 2026
-- **Service:** <https://api3.geo.admin.ch/rest/services/api/MapServer/identify>

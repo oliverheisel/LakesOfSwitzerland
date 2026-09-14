@@ -5,26 +5,6 @@ const COUNTRY_URL = "./Maps/Switzerland_WGS84.geojson";
 const MANIFEST_URL = "./data/processed/build_manifest.json";
 const SWITZERLAND_VIEW = [46.82, 8.23];
 const SWITZERLAND_ZOOM = 8;
-const SEERHEIN_LATLNGS = [
-  [47.656265, 9.204826],
-  [47.658548, 9.193944],
-  [47.666184, 9.178762],
-  [47.667647, 9.175498],
-  [47.668747, 9.172821],
-  [47.669343, 9.171114],
-  [47.669698, 9.169681],
-  [47.669976, 9.167769],
-  [47.670205, 9.165962],
-  [47.670314, 9.164239],
-  [47.670392, 9.162991],
-  [47.670396, 9.161934],
-  [47.670248, 9.160678],
-  [47.670034, 9.159896],
-  [47.669666, 9.159021],
-  [47.66906, 9.158155],
-  [47.668303, 9.157039],
-  [47.667867, 9.155913],
-];
 
 function riverOpacityForZoom(zoom) {
   if (zoom <= 7) return 0.18;
@@ -33,12 +13,6 @@ function riverOpacityForZoom(zoom) {
   if (zoom === 10) return 0.42;
   if (zoom === 11) return 0.54;
   return 0.68;
-}
-
-function seerheinWeightForZoom(zoom) {
-  if (zoom <= 9) return 2.25;
-  if (zoom <= 11) return 3;
-  return 4;
 }
 
 const numberFormat = new Intl.NumberFormat("en-CH");
@@ -101,22 +75,6 @@ const countryMaskPane = map.createPane("countryMask");
 countryMaskPane.style.zIndex = "375";
 countryMaskPane.style.pointerEvents = "none";
 const countryMaskRenderer = L.svg({ pane: "countryMask", padding: 0 });
-
-const riverExceptionPane = map.createPane("riverExceptions");
-riverExceptionPane.style.zIndex = "385";
-riverExceptionPane.style.pointerEvents = "none";
-const riverExceptionRenderer = L.svg({ pane: "riverExceptions", padding: 0.1 });
-const seerheinLayer = L.polyline(SEERHEIN_LATLNGS, {
-  color: "#0d465c",
-  interactive: false,
-  lineCap: "round",
-  lineJoin: "round",
-  opacity: Math.max(0.55, riverOpacityForZoom(SWITZERLAND_ZOOM)),
-  pane: "riverExceptions",
-  renderer: riverExceptionRenderer,
-  smoothFactor: 0,
-  weight: seerheinWeightForZoom(SWITZERLAND_ZOOM),
-}).addTo(map);
 
 const renderer = L.canvas({ padding: 0.4 });
 map.createPane("exactSelection");
@@ -514,13 +472,8 @@ terrainButton.addEventListener("click", () => {
 
 riversButton.addEventListener("click", () => {
   const shouldShow = !map.hasLayer(riversLayer);
-  if (shouldShow) {
-    riversLayer.addTo(map);
-    seerheinLayer.addTo(map);
-  } else {
-    map.removeLayer(riversLayer);
-    map.removeLayer(seerheinLayer);
-  }
+  if (shouldShow) riversLayer.addTo(map);
+  else map.removeLayer(riversLayer);
   riversButton.classList.toggle("is-active", shouldShow);
   riversButton.setAttribute("aria-pressed", String(shouldShow));
   riverLegend.hidden = !shouldShow;
@@ -530,10 +483,6 @@ map.on("zoomend", () => {
   const zoom = map.getZoom();
   zoomLabel.textContent = `Zoom ${zoom}`;
   riversLayer.setOpacity(riverOpacityForZoom(zoom));
-  seerheinLayer.setStyle({
-    opacity: Math.max(0.55, riverOpacityForZoom(zoom)),
-    weight: seerheinWeightForZoom(zoom),
-  });
 });
 
 initialize();

@@ -39,12 +39,6 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert 'terrainPane.style.pointerEvents = "none"' in javascript
     assert 'map.createPane("countryMask")' in javascript
     assert 'countryMaskPane.style.pointerEvents = "none"' in javascript
-    assert 'map.createPane("riverExceptions")' in javascript
-    assert 'riverExceptionPane.style.pointerEvents = "none"' in javascript
-    assert "const SEERHEIN_LATLNGS" in javascript
-    assert "const seerheinLayer = L.polyline" in javascript
-    assert "seerheinLayer.addTo(map)" in javascript
-    assert "map.removeLayer(seerheinLayer)" in javascript
     assert 'const countryRenderer = L.svg' in javascript
     assert 'fillRule: "evenodd"' in javascript
     assert "function isDisplayedLake(feature)" in javascript
