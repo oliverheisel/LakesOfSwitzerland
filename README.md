@@ -14,7 +14,9 @@ toggled without changing the downloadable lake dataset. An unsimplified
 swissBOUNDARIES3D 2026 vector polygon provides a crisp national outline and a
 subtle background highlight for Switzerland. The viewer limits rivers to the
 precise Swiss boundary and displays only Swiss lakes plus complete border
-lakes. The downloadable master dataset remains unchanged.
+lakes. An official swissTLM3D line keeps the Seerhein connection visible
+between the two Lake Constance polygons. The downloadable master dataset
+remains unchanged.
 
 The multidirectional swissALTI3D hillshade is enabled by default and can be
 toggled off. It reveals terrain and relative height differences without adding
