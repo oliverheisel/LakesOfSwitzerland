@@ -38,7 +38,6 @@
   --paper-deep: #262626;
   --water: #247ba0;
   --water-light: #61b9d8;
-  --border-lake: #3f9fc4;
   --brand-primary: #f5ff00;
   --selection: #ffffff;
   --line: rgba(255, 255, 255, 0.1);
@@ -371,16 +370,26 @@ h1 {
 }
 
 .footer-links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem 1rem;
+  display: grid;
+  gap: 0.4rem;
+  margin-left: auto;
 }
 
 .footer-links a {
-  font-weight: 600;
-  text-decoration-color: var(--water-light);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 3px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  padding: 0.35rem 0.5rem;
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.footer-links a:hover,
+.footer-links a:focus-visible {
+  border-color: var(--water-light);
+  color: var(--water-light);
 }
 
 .footer-identity {
@@ -391,57 +400,6 @@ h1 {
   justify-content: space-between;
   margin-top: 1.1rem;
   padding-top: 1rem;
-}
-
-.layer-controls {
-  display: flex;
-  gap: 0.4rem;
-  margin-left: auto;
-}
-
-.layer-controls button {
-  align-items: center;
-  background: var(--paper-deep);
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  color: var(--ink);
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  font-size: 0.58rem;
-  font-weight: 750;
-  gap: 0.18rem;
-  height: 44px;
-  justify-content: center;
-  padding: 0.25rem;
-  width: 56px;
-}
-
-.layer-controls button:hover {
-  border-color: var(--water-light);
-}
-
-.layer-controls button.is-active {
-  background: var(--water);
-  border-color: var(--water-light);
-}
-
-.layer-controls button.is-active:hover {
-  background: #2d8caf;
-}
-
-.layer-controls button:focus-visible {
-  outline: 3px solid rgba(36, 123, 160, 0.55);
-  outline-offset: 2px;
-}
-
-.layer-controls svg {
-  fill: none;
-  height: 14px;
-  stroke: currentColor;
-  stroke-linecap: square;
-  stroke-width: 1.8;
-  width: 14px;
 }
 
 .map-shell,
@@ -465,7 +423,7 @@ h1 {
 }
 
 .leaflet-rivers-pane {
-  filter: brightness(0) saturate(100%) invert(29%) sepia(42%) saturate(1175%) hue-rotate(153deg) brightness(74%) contrast(94%);
+  filter: brightness(0) saturate(100%) invert(25%) sepia(41%) saturate(1260%) hue-rotate(153deg) brightness(52%) contrast(108%);
 }
 
 .leaflet-terrain-pane {
@@ -692,11 +650,6 @@ h1 {
   background: var(--water);
 }
 
-.swatch.border {
-  background: var(--border-lake);
-  border-color: #a6e1f3;
-}
-
 .line-swatch {
   border-top: 3px solid var(--selection);
   display: inline-block;
@@ -704,7 +657,7 @@ h1 {
 }
 
 .river-swatch {
-  border-top: 3px solid var(--water-light);
+  border-top: 3px solid #0d465c;
   display: inline-block;
   width: 16px;
 }
@@ -803,10 +756,6 @@ noscript {
     padding-top: 0.8rem;
   }
 
-  .footer-links {
-    display: none;
-  }
-
   .footer-identity {
     margin-top: 0;
     padding-top: 0.7rem;
@@ -850,7 +799,7 @@ noscript {
     min-height: 59%;
   }
 
-  .legend span:nth-child(5) {
+  .legend span:nth-child(4) {
     display: none;
   }
 }

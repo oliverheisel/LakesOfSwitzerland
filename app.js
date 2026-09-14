@@ -14,14 +14,6 @@ const normalStyle = {
   opacity: 0.96,
   weight: 1,
 };
-const borderStyle = {
-  color: "#a6e1f3",
-  fillColor: "#3f9fc4",
-  fillOpacity: 1,
-  opacity: 1,
-  weight: 1.8,
-};
-
 const map = L.map("map", {
   center: SWITZERLAND_VIEW,
   zoom: SWITZERLAND_ZOOM,
@@ -59,7 +51,7 @@ const riversLayer = L.tileLayer(
     attribution: "&copy; BAFU",
     maxZoom: 19,
     minZoom: 7,
-    opacity: 0.32,
+    opacity: 0.65,
     pane: "rivers",
     tileSize: 256,
   },
@@ -100,8 +92,8 @@ let selectedLayer;
 let searchIndex = [];
 let visibleStatsReady = false;
 
-function featureStyle(feature) {
-  return feature.properties?.border_lake ? borderStyle : normalStyle;
+function featureStyle() {
+  return normalStyle;
 }
 
 function isDisplayedLake(feature) {
@@ -481,7 +473,7 @@ riversButton.addEventListener("click", () => {
 map.on("zoomend", () => {
   const zoom = map.getZoom();
   zoomLabel.textContent = `Zoom ${zoom}`;
-  riversLayer.setOpacity(zoom <= 8 ? 0.32 : zoom <= 10 ? 0.42 : 0.55);
+  riversLayer.setOpacity(zoom <= 8 ? 0.65 : zoom <= 10 ? 0.75 : 0.88);
 });
 
 initialize();

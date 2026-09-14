@@ -44,7 +44,7 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert javascript.count("fillOpacity: 1") >= 3
     assert 'id="rivers-button"' in html
     assert 'id="terrain-button"' in html
-    assert 'class="layer-controls"' in html
+    assert 'class="layer-controls"' not in html + stylesheet
     assert html.count('class="is-active"') >= 2
     assert html.count('aria-pressed="true"') >= 2
     assert "const terrainLayer = L.tileLayer(" in javascript
@@ -61,6 +61,13 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert "17’966" in html
     assert "1’486" in html
     assert "site-version" not in html + stylesheet
+    footer_identity = html.split('<div class="footer-identity">', 1)[1].split("</footer>", 1)[0]
+    assert "Download GeoJSON" in footer_identity
+    assert "GitHub" in footer_identity
+    map_toolbar = html.split('<div class="map-toolbar"', 1)[1].split("</div>", 1)[0]
+    assert 'id="terrain-button"' in map_toolbar
+    assert 'id="rivers-button"' in map_toolbar
+    assert "Border lake" not in html
 
 
 def test_pages_workflow_stages_only_required_site_files() -> None:
