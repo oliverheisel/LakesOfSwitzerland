@@ -48,7 +48,7 @@ const terrainLayer = L.tileLayer(
     pane: "terrain",
     tileSize: 256,
   },
-);
+).addTo(map);
 
 const riversPane = map.createPane("rivers");
 riversPane.style.zIndex = "350";

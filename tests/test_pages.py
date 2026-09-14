@@ -44,8 +44,11 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert javascript.count("fillOpacity: 1") >= 3
     assert 'id="rivers-button"' in html
     assert 'id="terrain-button"' in html
-    assert 'aria-pressed="false"' in html
-    assert 'aria-pressed="true"' in html
+    assert 'class="layer-controls"' in html
+    assert html.count('class="is-active"') >= 2
+    assert html.count('aria-pressed="true"') >= 2
+    assert "const terrainLayer = L.tileLayer(" in javascript
+    assert ").addTo(map);" in javascript
     assert 'terrainButton.addEventListener("click"' in javascript
     assert 'riversButton.addEventListener("click"' in javascript
     assert "map.attributionControl.setPrefix(false)" in javascript
