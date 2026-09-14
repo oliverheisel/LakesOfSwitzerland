@@ -24,6 +24,7 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert './Maps/Switzerland_WGS84.geojson' in javascript
     assert './data/processed/build_manifest.json' in javascript
     assert "ch.bafu.flussordnungszahlen-strahler" in javascript
+    assert "ch.swisstopo.swissalti3d-reliefschattierung" in javascript
     assert "ch.swisstopo.pixelkarte-grau" not in javascript
     assert "smoothFactor: 0" in javascript
     assert 'map.createPane("exactSelection")' in javascript
@@ -31,6 +32,8 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert 'map.createPane("rivers")' in javascript
     assert 'riversPane.style.pointerEvents = "none"' in javascript
     assert 'countryPane.style.pointerEvents = "none"' in javascript
+    assert 'map.createPane("terrain")' in javascript
+    assert 'terrainPane.style.pointerEvents = "none"' in javascript
     assert 'map.createPane("countryMask")' in javascript
     assert 'countryMaskPane.style.pointerEvents = "none"' in javascript
     assert 'const countryRenderer = L.svg' in javascript
@@ -40,7 +43,10 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert 'color: "#3a4144"' in javascript
     assert javascript.count("fillOpacity: 1") >= 3
     assert 'id="rivers-button"' in html
+    assert 'id="terrain-button"' in html
+    assert 'aria-pressed="false"' in html
     assert 'aria-pressed="true"' in html
+    assert 'terrainButton.addEventListener("click"' in javascript
     assert 'riversButton.addEventListener("click"' in javascript
     assert "map.attributionControl.setPrefix(false)" in javascript
     assert "function formatLakeName(value)" in javascript
@@ -51,6 +57,7 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     assert "\u2013" not in html + javascript + readme
     assert "17’966" in html
     assert "1’486" in html
+    assert "site-version" not in html + stylesheet
 
 
 def test_pages_workflow_stages_only_required_site_files() -> None:

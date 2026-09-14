@@ -100,7 +100,6 @@
               >
               <span class="brand-logo-primary" aria-hidden="true"></span>
             </a>
-            <span class="site-version">v0.1</span>
           </div>
         </footer>
       </aside>
@@ -109,6 +108,12 @@
         <div id="map" tabindex="0"></div>
 
         <div class="map-toolbar" aria-label="Map tools">
+          <button id="terrain-button" type="button" aria-pressed="false">
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="m3 19 6-10 3 5 3-7 6 12M7 15h10" />
+            </svg>
+            Terrain
+          </button>
           <button id="rivers-button" class="is-active" type="button" aria-pressed="true">
             <svg aria-hidden="true" viewBox="0 0 24 24">
               <path d="M3 5c5 0 4 5 9 5s4 5 9 5M3 10c5 0 4 5 9 5s4 4 9 4" />
@@ -138,6 +143,7 @@
         <div class="legend" aria-label="Legend">
           <span><i class="swatch lake"></i>Lake</span>
           <span><i class="swatch border"></i>Border lake</span>
+          <span id="terrain-legend" hidden><i class="terrain-swatch"></i>Relief</span>
           <span id="river-legend"><i class="river-swatch"></i>River</span>
           <span><i class="line-swatch"></i>Full detail</span>
         </div>

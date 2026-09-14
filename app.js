@@ -36,6 +36,20 @@ map.attributionControl.addAttribution("&copy; swisstopo");
 L.control.zoom({ position: "bottomright" }).addTo(map);
 L.control.scale({ imperial: false, position: "bottomright" }).addTo(map);
 
+const terrainPane = map.createPane("terrain");
+terrainPane.style.zIndex = "325";
+terrainPane.style.pointerEvents = "none";
+const terrainLayer = L.tileLayer(
+  "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissalti3d-reliefschattierung/default/current/3857/{z}/{x}/{y}.png",
+  {
+    attribution: "&copy; swisstopo",
+    maxZoom: 19,
+    opacity: 0.34,
+    pane: "terrain",
+    tileSize: 256,
+  },
+);
+
 const riversPane = map.createPane("rivers");
 riversPane.style.zIndex = "350";
 riversPane.style.pointerEvents = "none";
@@ -70,7 +84,9 @@ const searchInput = document.querySelector("#lake-search");
 const searchResults = document.querySelector("#search-results");
 const featurePanel = document.querySelector("#feature-panel");
 const fitButton = document.querySelector("#fit-button");
+const terrainButton = document.querySelector("#terrain-button");
 const riversButton = document.querySelector("#rivers-button");
+const terrainLegend = document.querySelector("#terrain-legend");
 const riverLegend = document.querySelector("#river-legend");
 const zoomLabel = document.querySelector("#zoom-label");
 const loadPanel = document.querySelector("#load-panel");
@@ -442,6 +458,15 @@ document.addEventListener("click", (event) => {
 fitButton.addEventListener("click", () => {
   if (!lakesLayer) return;
   map.fitBounds(lakesLayer.getBounds(), { padding: [24, 24] });
+});
+
+terrainButton.addEventListener("click", () => {
+  const shouldShow = !map.hasLayer(terrainLayer);
+  if (shouldShow) terrainLayer.addTo(map);
+  else map.removeLayer(terrainLayer);
+  terrainButton.classList.toggle("is-active", shouldShow);
+  terrainButton.setAttribute("aria-pressed", String(shouldShow));
+  terrainLegend.hidden = !shouldShow;
 });
 
 riversButton.addEventListener("click", () => {

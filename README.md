@@ -16,6 +16,10 @@ subtle background highlight for Switzerland. The viewer limits rivers to the
 precise Swiss boundary and displays only Swiss lakes plus complete border
 lakes. The downloadable master dataset remains unchanged.
 
+An optional multidirectional swissALTI3D hillshade reveals terrain and relative
+height differences without adding place names. It is clipped to the same exact
+Swiss boundary and remains below rivers and lakes.
+
 The deployment workflow publishes only the viewer and its required data. For a
 new repository, select **GitHub Actions** once under **Settings → Pages → Build
 and deployment → Source**; subsequent pushes to `main` deploy automatically.
