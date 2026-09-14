@@ -1,15 +1,47 @@
+@font-face {
+  font-display: swap;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  src: url("./assets/fonts/montserrat-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  src: url("./assets/fonts/montserrat-700.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./assets/fonts/open-sans-400.woff2") format("woff2");
+}
+
+@font-face {
+  font-display: swap;
+  font-family: "Open Sans";
+  font-style: normal;
+  font-weight: 600;
+  src: url("./assets/fonts/open-sans-600.woff2") format("woff2");
+}
+
 :root {
-  color-scheme: light;
-  --ink: #102a33;
-  --muted: #587078;
-  --paper: #f5f1e8;
-  --paper-deep: #e8e1d2;
-  --water: #087fa5;
-  --water-light: #25b4d8;
-  --border-lake: #f1843e;
-  --selection: #ff4d20;
-  --line: rgba(16, 42, 51, 0.16);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color-scheme: dark;
+  --ink: #fafafa;
+  --muted: #a3a3a3;
+  --paper: #171717;
+  --paper-deep: #262626;
+  --water: #247ba0;
+  --water-light: #61b9d8;
+  --border-lake: #3f9fc4;
+  --selection: #ffffff;
+  --line: rgba(255, 255, 255, 0.1);
+  font-family: "Open Sans", sans-serif;
   font-synthesis: none;
 }
 
@@ -29,6 +61,11 @@ body {
   overflow: hidden;
 }
 
+* {
+  scrollbar-color: #3f3f3f var(--paper);
+  scrollbar-width: thin;
+}
+
 button,
 input {
   font: inherit;
@@ -39,8 +76,8 @@ a {
 }
 
 .skip-link {
-  background: var(--ink);
-  color: white;
+  background: var(--water);
+  color: var(--ink);
   left: 1rem;
   padding: 0.7rem 1rem;
   position: fixed;
@@ -54,15 +91,12 @@ a {
 
 .app-shell {
   display: grid;
-  grid-template-columns: minmax(310px, 390px) 1fr;
+  grid-template-columns: minmax(320px, 390px) 1fr;
   height: 100%;
 }
 
 .sidebar {
-  background:
-    linear-gradient(rgba(16, 42, 51, 0.045) 1px, transparent 1px),
-    var(--paper);
-  background-size: 100% 32px;
+  background: var(--paper);
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
@@ -72,31 +106,35 @@ a {
   z-index: 700;
 }
 
-.masthead::before {
-  background: var(--selection);
-  content: "";
+.brand-link {
+  display: inline-block;
+  margin-bottom: 1.9rem;
+}
+
+.brand-logo {
   display: block;
-  height: 5px;
-  margin-bottom: 1.4rem;
-  width: 42px;
+  height: auto;
+  max-width: 180px;
+  width: 48%;
 }
 
 .eyebrow,
 .panel-kicker {
-  color: var(--water);
+  color: var(--water-light);
   font-size: 0.7rem;
-  font-weight: 800;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
   letter-spacing: 0.14em;
   margin: 0 0 0.6rem;
   text-transform: uppercase;
 }
 
 h1 {
-  font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(2.45rem, 4vw, 4.2rem);
-  font-weight: 500;
-  letter-spacing: -0.055em;
-  line-height: 0.88;
+  font-family: "Montserrat", sans-serif;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.02;
   margin: 0;
 }
 
@@ -116,7 +154,8 @@ h1 {
 .search-section label {
   display: block;
   font-size: 0.72rem;
-  font-weight: 800;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 700;
   letter-spacing: 0.08em;
   margin-bottom: 0.45rem;
   text-transform: uppercase;
@@ -142,9 +181,9 @@ h1 {
 
 .search-wrap input {
   appearance: none;
-  background: rgba(255, 255, 255, 0.68);
+  background: var(--paper-deep);
   border: 1px solid var(--line);
-  border-radius: 0;
+  border-radius: 6px;
   color: var(--ink);
   min-height: 44px;
   outline: none;
@@ -154,7 +193,11 @@ h1 {
 
 .search-wrap input:focus {
   border-color: var(--water);
-  box-shadow: 0 0 0 3px rgba(8, 127, 165, 0.14);
+  box-shadow: 0 0 0 3px rgba(36, 123, 160, 0.35);
+}
+
+.search-wrap input::placeholder {
+  color: #777;
 }
 
 .search-wrap input:disabled {
@@ -163,9 +206,10 @@ h1 {
 }
 
 .search-results {
-  background: #fffdf8;
+  background: var(--paper-deep);
   border: 1px solid var(--line);
-  box-shadow: 0 12px 30px rgba(16, 42, 51, 0.14);
+  border-radius: 6px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.42);
   left: 0;
   list-style: none;
   margin: 0;
@@ -191,7 +235,7 @@ h1 {
 
 .search-results button:hover,
 .search-results button:focus-visible {
-  background: rgba(8, 127, 165, 0.09);
+  background: rgba(36, 123, 160, 0.3);
   outline: none;
 }
 
@@ -226,10 +270,10 @@ h1 {
 }
 
 .stats strong {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.25rem;
   font-variant-numeric: tabular-nums;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .stats span {
@@ -239,15 +283,16 @@ h1 {
 }
 
 .feature-panel {
-  background: rgba(255, 255, 255, 0.38);
+  background: var(--paper-deep);
   border-left: 3px solid var(--water);
+  border-radius: 0 7px 7px 0;
   padding: 1rem 1.1rem;
 }
 
 .feature-panel h2 {
-  font-family: Georgia, "Times New Roman", serif;
+  font-family: "Montserrat", sans-serif;
   font-size: 1.55rem;
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.05;
   margin: 0;
 }
@@ -302,7 +347,7 @@ h1 {
 }
 
 .sidebar-footer a {
-  font-weight: 750;
+  font-weight: 600;
   text-decoration-color: var(--water-light);
   text-decoration-thickness: 2px;
   text-underline-offset: 3px;
@@ -322,7 +367,7 @@ h1 {
 }
 
 .map-shell {
-  background: #d9e1df;
+  background: #0f0f0f;
 }
 
 #map {
@@ -330,37 +375,61 @@ h1 {
 }
 
 .leaflet-container {
-  background: #dce5e3;
+  background: #0f0f0f;
   font-family: inherit;
 }
 
+.leaflet-tile-pane {
+  filter: grayscale(1) invert(1) brightness(0.62) contrast(1.18);
+  opacity: 0.72;
+}
+
 .leaflet-control-attribution {
-  background: rgba(245, 241, 232, 0.88) !important;
+  background: rgba(23, 23, 23, 0.9) !important;
   color: var(--muted);
 }
 
 .leaflet-control-attribution a {
-  color: var(--ink);
+  color: var(--water-light);
+}
+
+.leaflet-bar {
+  border: 1px solid var(--line) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35) !important;
+  overflow: hidden;
 }
 
 .leaflet-control-zoom a {
-  border-radius: 0 !important;
+  background: rgba(23, 23, 23, 0.94) !important;
+  border-bottom-color: var(--line) !important;
   color: var(--ink);
 }
 
+.leaflet-control-zoom a:hover {
+  background: var(--paper-deep) !important;
+}
+
+.leaflet-control-scale-line {
+  background: rgba(23, 23, 23, 0.82);
+  border-color: rgba(255, 255, 255, 0.55);
+  color: var(--ink);
+  text-shadow: 0 1px 2px #000;
+}
+
 .leaflet-tooltip.lake-tooltip {
-  background: var(--ink);
-  border: 0;
-  border-radius: 0;
-  box-shadow: none;
-  color: white;
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+  color: var(--ink);
   font-size: 0.72rem;
   font-weight: 750;
   padding: 0.35rem 0.55rem;
 }
 
 .leaflet-tooltip-top.lake-tooltip::before {
-  border-top-color: var(--ink);
+  border-top-color: var(--paper-deep);
 }
 
 .map-toolbar {
@@ -377,9 +446,10 @@ h1 {
 .map-toolbar span {
   align-items: center;
   backdrop-filter: blur(8px);
-  background: rgba(245, 241, 232, 0.94);
-  border: 1px solid rgba(16, 42, 51, 0.18);
-  box-shadow: 0 4px 16px rgba(16, 42, 51, 0.11);
+  background: rgba(23, 23, 23, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.32);
   color: var(--ink);
   display: flex;
   min-height: 38px;
@@ -399,11 +469,11 @@ h1 {
 }
 
 .map-toolbar button:hover:not(:disabled) {
-  background: white;
+  background: var(--paper-deep);
 }
 
 .map-toolbar button:focus-visible {
-  outline: 3px solid rgba(8, 127, 165, 0.4);
+  outline: 3px solid rgba(36, 123, 160, 0.55);
   outline-offset: 2px;
 }
 
@@ -424,10 +494,12 @@ h1 {
 
 .load-panel {
   align-items: center;
-  background: var(--ink);
+  background: var(--paper-deep);
+  border: 1px solid var(--line);
+  border-radius: 7px;
   bottom: 1.2rem;
-  box-shadow: 0 14px 35px rgba(16, 42, 51, 0.28);
-  color: white;
+  box-shadow: 0 14px 35px rgba(0, 0, 0, 0.45);
+  color: var(--ink);
   display: grid;
   gap: 0.8rem;
   grid-template-columns: auto 1fr;
@@ -453,7 +525,7 @@ h1 {
 
 .load-mark {
   animation: pulse 1s ease-in-out infinite alternate;
-  background: var(--water-light);
+  background: var(--water);
   border-radius: 50%;
   height: 12px;
   width: 12px;
@@ -482,7 +554,7 @@ h1 {
 }
 
 .progress-track span {
-  background: var(--water-light);
+  background: var(--water);
   height: 100%;
   margin: 0;
   transition: width 150ms linear;
@@ -491,9 +563,11 @@ h1 {
 
 .legend {
   backdrop-filter: blur(8px);
-  background: rgba(245, 241, 232, 0.93);
+  background: rgba(23, 23, 23, 0.93);
+  border: 1px solid var(--line);
+  border-radius: 6px;
   bottom: 1.15rem;
-  box-shadow: 0 4px 16px rgba(16, 42, 51, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-wrap: wrap;
   font-size: 0.65rem;
@@ -511,19 +585,19 @@ h1 {
 }
 
 .swatch {
-  border: 1px solid #075c78;
+  border: 1px solid var(--water-light);
   display: inline-block;
   height: 10px;
   width: 15px;
 }
 
 .swatch.lake {
-  background: rgba(37, 180, 216, 0.75);
+  background: var(--water);
 }
 
 .swatch.border {
-  background: rgba(241, 132, 62, 0.78);
-  border-color: #a34e18;
+  background: var(--border-lake);
+  border-color: #a6e1f3;
 }
 
 .line-swatch {
@@ -577,9 +651,12 @@ noscript {
     grid-column: 1 / -1;
   }
 
-  .masthead::before {
-    height: 4px;
-    margin-bottom: 0.7rem;
+  .brand-link {
+    margin-bottom: 0.8rem;
+  }
+
+  .brand-logo {
+    max-width: 130px;
   }
 
   h1 {

@@ -7,7 +7,9 @@
       name="description"
       content="Interaktive Karte aller 18'004 stehenden Gewässer aus dem LakesOfSwitzerland-Datensatz."
     >
+    <meta name="theme-color" content="#171717">
     <title>Lakes of Switzerland – Datensatzkarte</title>
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon.svg">
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -29,8 +31,17 @@
     <div class="app-shell">
       <aside class="sidebar" aria-label="Datensatz und Gewässerdetails">
         <header class="masthead">
-          <p class="eyebrow">swissTLM3D · Release 2026</p>
-          <h1>Lakes of<br>Switzerland</h1>
+          <a class="brand-link" href="https://www.heisel.one/" aria-label="heisel.one">
+            <img
+              class="brand-logo"
+              src="./assets/logo/oliver-heisel-wordmark.png"
+              alt="Oliver Heisel"
+              width="381"
+              height="148"
+            >
+          </a>
+          <p class="eyebrow">Data · Mapping · Switzerland</p>
+          <h1>Lakes of Switzerland</h1>
           <p class="intro">
             Alle stehenden Gewässer der Schweiz – vom Bodensee bis zum kleinsten
             kartierten Weiher.
@@ -95,7 +106,7 @@
         <footer class="sidebar-footer">
           <a href="./Maps/LakesOfSwitzerland_WGS84.geojson" download>GeoJSON herunterladen</a>
           <a href="https://github.com/oliverheisel/LakesOfSwitzerland">Quellcode</a>
-          <p>Daten: © swisstopo · swissTLM3D 2.4</p>
+          <p>© 2026 Oliver Heisel · Daten: © swisstopo</p>
         </footer>
       </aside>
 

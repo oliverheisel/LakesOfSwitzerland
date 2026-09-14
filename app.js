@@ -7,18 +7,18 @@ const SWITZERLAND_ZOOM = 8;
 
 const numberFormat = new Intl.NumberFormat("de-CH");
 const normalStyle = {
-  color: "#076b8a",
-  fillColor: "#25b4d8",
-  fillOpacity: 0.57,
-  opacity: 0.8,
-  weight: 0.8,
+  color: "#61b9d8",
+  fillColor: "#247BA0",
+  fillOpacity: 0.76,
+  opacity: 0.96,
+  weight: 1,
 };
 const borderStyle = {
-  color: "#9c4b17",
-  fillColor: "#f1843e",
-  fillOpacity: 0.67,
-  opacity: 0.95,
-  weight: 1.5,
+  color: "#a6e1f3",
+  fillColor: "#3f9fc4",
+  fillOpacity: 0.82,
+  opacity: 1,
+  weight: 1.8,
 };
 
 const map = L.map("map", {
@@ -137,13 +137,13 @@ function selectFeature(layer, shouldZoom = false) {
   if (exactSelection) map.removeLayer(exactSelection);
 
   selectedLayer = layer;
-  selectedLayer.setStyle({ color: "#ff4d20", opacity: 1, weight: 2.2 });
+  selectedLayer.setStyle({ color: "#ffffff", opacity: 1, weight: 2.2 });
   exactSelection = L.geoJSON(layer.feature, {
     interactive: false,
     renderer: exactRenderer,
     smoothFactor: 0,
     style: {
-      color: "#ff4d20",
+      color: "#ffffff",
       fill: false,
       opacity: 1,
       weight: 2.8,
