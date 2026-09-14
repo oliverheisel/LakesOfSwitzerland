@@ -311,10 +311,17 @@ h1 {
 
 .feature-panel h2 {
   font-family: "Montserrat", sans-serif;
-  font-size: 1.55rem;
+  font-size: 1.75rem;
   font-weight: 600;
   line-height: 1.05;
   margin: 0;
+}
+
+.alternate-names {
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.45;
+  margin: 0.45rem 0 0;
 }
 
 .feature-panel > p:not(.panel-kicker) {
@@ -400,8 +407,12 @@ h1 {
 }
 
 .leaflet-tile-pane {
-  filter: grayscale(1) invert(1) brightness(0.62) contrast(1.18);
-  opacity: 0.72;
+  filter: grayscale(1) invert(1) brightness(0.58) contrast(1.2);
+  opacity: 0.62;
+}
+
+.leaflet-rivers-pane {
+  filter: hue-rotate(315deg) saturate(0.65) brightness(1.4);
 }
 
 .leaflet-control-attribution {
@@ -626,6 +637,12 @@ h1 {
   width: 16px;
 }
 
+.river-swatch {
+  border-top: 1px solid var(--water-light);
+  display: inline-block;
+  width: 16px;
+}
+
 noscript {
   background: #8c2f1b;
   bottom: 1rem;
@@ -714,7 +731,7 @@ noscript {
   }
 
   .feature-panel h2 {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
 
   .map-shell {
@@ -755,7 +772,7 @@ noscript {
     min-height: 59%;
   }
 
-  .legend span:nth-child(3) {
+  .legend span:nth-child(4) {
     display: none;
   }
 }

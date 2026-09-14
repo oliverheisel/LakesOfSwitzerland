@@ -21,9 +21,18 @@ def test_pages_entrypoint_references_versioned_assets() -> None:
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert './Maps/LakesOfSwitzerland_WGS84.geojson' in javascript
     assert './data/processed/build_manifest.json' in javascript
+    assert "ch.swisstopo.swissalti3d-reliefschattierung" in javascript
+    assert "ch.swisstopo.swisstlm3d-gewaessernetz" in javascript
+    assert "ch.swisstopo.pixelkarte-grau" not in javascript
     assert "smoothFactor: 0" in javascript
     assert 'map.createPane("exactSelection")' in javascript
     assert 'style.pointerEvents = "none"' in javascript
+    assert 'map.createPane("rivers")' in javascript
+    assert 'riversPane.style.pointerEvents = "none"' in javascript
+    assert "map.attributionControl.setPrefix(false)" in javascript
+    assert "function formatLakeName(value)" in javascript
+    assert "/see$/iu" in javascript
+    assert 'class="alternate-names"' in javascript
     assert "--brand-primary: #f5ff00" in stylesheet
     assert "\u2014" not in html + javascript + readme
     assert "\u2013" not in html + javascript + readme

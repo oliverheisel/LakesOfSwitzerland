@@ -30,14 +30,30 @@ const map = L.map("map", {
   zoomControl: false,
 });
 
+map.attributionControl.setPrefix(false);
 L.control.zoom({ position: "bottomright" }).addTo(map);
 L.control.scale({ imperial: false, position: "bottomright" }).addTo(map);
 
 L.tileLayer(
-  "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.pixelkarte-grau/default/current/3857/{z}/{x}/{y}.jpeg",
+  "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swissalti3d-reliefschattierung/default/current/3857/{z}/{x}/{y}.png",
   {
-    attribution: "Basemap: &copy; swisstopo",
+    attribution: "&copy; swisstopo",
     maxZoom: 19,
+    tileSize: 256,
+  },
+).addTo(map);
+
+const riversPane = map.createPane("rivers");
+riversPane.style.zIndex = "350";
+riversPane.style.pointerEvents = "none";
+const riversLayer = L.tileLayer(
+  "https://wmts.geo.admin.ch/1.0.0/ch.swisstopo.swisstlm3d-gewaessernetz/default/current/3857/{z}/{x}/{y}.png",
+  {
+    attribution: "&copy; swisstopo",
+    maxZoom: 19,
+    minZoom: 8,
+    opacity: 0.1,
+    pane: "rivers",
     tileSize: 256,
   },
 ).addTo(map);
@@ -110,17 +126,35 @@ function propertyRow(label, value) {
   return `<div><dt>${escapeHtml(label)}</dt><dd>${escapeHtml(value)}</dd></div>`;
 }
 
+function formatLakeName(value) {
+  const names = String(value || "Unnamed lake")
+    .split(/\s+(?:\||\/)\s+/)
+    .map((name) => name.trim())
+    .filter(Boolean);
+  const germanIndex = names.findIndex((name) => /see$/iu.test(name));
+  const primaryIndex = germanIndex >= 0 ? germanIndex : 0;
+
+  return {
+    primary: names[primaryIndex],
+    alternatives: names.filter((_, index) => index !== primaryIndex),
+  };
+}
+
 function renderFeaturePanel(feature) {
   const properties = feature.properties ?? {};
   const details = countGeometry(feature.geometry);
-  const name = properties.name || "Unnamed lake";
+  const name = formatLakeName(properties.name);
   const geometryLabel = details.polygons > 1
     ? `MultiPolygon, ${numberFormat.format(details.polygons)} parts`
     : "Polygon";
+  const alternatives = name.alternatives.length
+    ? `<p class="alternate-names">${name.alternatives.map(escapeHtml).join("<br>")}</p>`
+    : "";
 
   featurePanel.innerHTML = `
     <p class="panel-kicker">Selected lake</p>
-    <h2>${escapeHtml(name)}</h2>
+    <h2>${escapeHtml(name.primary)}</h2>
+    ${alternatives}
     <dl class="detail-list">
       ${propertyRow("Vertices", numberFormat.format(details.vertices))}
       ${propertyRow("Geometry", geometryLabel)}
@@ -156,26 +190,33 @@ function selectFeature(layer, shouldZoom = false) {
 
 function addToSearchIndex(feature, layer) {
   const properties = feature.properties ?? {};
-  const name = properties.name;
+  const rawName = properties.name;
   const id = properties.lake_id || properties.gewiss_nr || properties.source_feature_id;
-  if (!name && !id) return;
+  if (!rawName && !id) return;
 
-  const label = name || `Lake ${id}`;
-  const descriptor = properties.border_lake
+  const name = formatLakeName(rawName || `Lake ${id}`);
+  const label = name.primary;
+  const descriptor = name.alternatives.join(", ") || (properties.border_lake
     ? countryNames(properties.country)
-    : (properties.gewiss_nr ? `GEWISS ${properties.gewiss_nr}` : properties.lake_id);
+    : (properties.gewiss_nr ? `GEWISS ${properties.gewiss_nr}` : properties.lake_id));
 
   searchIndex.push({
     descriptor: descriptor || "Unnamed",
     label,
     layer,
-    normalized: normalize(`${label} ${id} ${properties.gewiss_nr ?? ""}`),
+    normalized: normalize(`${rawName || label} ${id} ${properties.gewiss_nr ?? ""}`),
   });
 }
 
 function onEachFeature(feature, layer) {
   const name = feature.properties?.name;
-  if (name) layer.bindTooltip(name, { className: "lake-tooltip", direction: "top", sticky: true });
+  if (name) {
+    layer.bindTooltip(formatLakeName(name).primary, {
+      className: "lake-tooltip",
+      direction: "top",
+      sticky: true,
+    });
+  }
   layer.on("click", () => selectFeature(layer));
   addToSearchIndex(feature, layer);
 }
@@ -317,7 +358,9 @@ fitButton.addEventListener("click", () => {
 });
 
 map.on("zoomend", () => {
-  zoomLabel.textContent = `Zoom ${map.getZoom()}`;
+  const zoom = map.getZoom();
+  zoomLabel.textContent = `Zoom ${zoom}`;
+  riversLayer.setOpacity(zoom <= 8 ? 0.1 : zoom <= 10 ? 0.17 : 0.25);
 });
 
 initialize();
